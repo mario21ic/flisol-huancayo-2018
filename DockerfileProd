@@ -1,0 +1,5 @@
+FROM mario21ic/flaskredis
+
+COPY ./src/app.py /code/
+
+CMD ["python", "app.py"]

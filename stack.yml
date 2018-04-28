@@ -1,0 +1,51 @@
+version: "3"
+services:
+  web:
+    image: mario21ic/flaskredis:prod
+    environment:
+      - REDIS_HOST=172.21.0.2
+      - REDIS_PORT=6379
+    networks:
+      - backend
+    deploy:
+      mode: replicated
+      replicas: 5
+      #resources:
+      #  limits:
+      #    memory: 340M
+      #  reservations:
+      #    memory: 100M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 60
+        delay: 2s
+        failure_action: continue
+        monitor: 20s
+        max_failure_ratio: 0.3
+    #logging:
+    #  driver: "awslogs"
+    #  options:
+    #    awslogs-region: "${AWS_REGION}"
+    #    awslogs-group: "${APP_ENVIRONMENT}-worker-hotel"
+    #    awslogs-create-group: "true"
+    #    awslogs-stream: "log-stream"
+
+  redis:
+    image: "redis:alpine"
+
+  nginx:
+    image: "redis:alpine"
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+  backend:
+    ipam:
+      config:
+        - subnet: 10.4.0.0/16

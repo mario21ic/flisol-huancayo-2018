@@ -1,0 +1,9 @@
+version: '2'
+services:
+
+  jenkins:
+    image: jenkins
+    volumes:
+      - ./data/jenkins/:/var/jenkins_home
+    ports:
+      - 8080:8080
